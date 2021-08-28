@@ -1,15 +1,11 @@
-pipeline {
-    agent any
-    tools {
-        maven 'Maven'
-        //added a comment //
+node {
+  stage('SCM') {
+    checkout scm
+  }
+  stage('SonarQube Analysis') {
+    def mvn = tool 'Maven';
+    withSonarQubeEnv() {
+      sh "${mvn}/bin/mvn sonar:sonar"
     }
-    stages {
-        stage('buildstage') {
-            steps {
-                sh 'mvn clean install'
-            }
-        }
-    }
+  }
 }
-
